@@ -63,7 +63,7 @@ def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger,
     if train_loader.sampler is not None and cfg.dist:
         train_loader.sampler.set_epoch(epoch)
     model.zero_grad()
-    num_batch_accumul = 16 #Folllwing gradient accumulation training. Please refer: https://medium.com/huggingface/training-larger-batches-practical-tips-on-1-gpu-multi-gpu-distributed-setups-ec88c3e51255
+    num_batch_accumul = 16 #Folllwing gradient accumulation training (https://medium.com/huggingface/training-larger-batches-practical-tips-on-1-gpu-multi-gpu-distributed-setups-ec88c3e51255).
     loss_accumul, is_processed = 0, False 
     for i, batch in enumerate(train_loader, start=1):
         data_time.update(time.time() - end)
@@ -94,8 +94,6 @@ def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger,
             optimizer.step()
             optimizer.zero_grad()
             
-            
-            print('processed i {0} loss_accmul: {1}'.format(i,loss_accumul))
             loss_accumul = 0
             is_processed = False
         
@@ -123,10 +121,9 @@ def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger,
             
 
             logger.info(log_str)
-    if is_processed : 
+    if is_processed :
         optimizer.step()
         optimizer.zero_grad()
-        
         
         loss_accumul = 0
         is_processed = False    
