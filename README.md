@@ -12,7 +12,7 @@ Coarse-to-fine 3D instance segmentation methods show weak performances compared 
 During inference, the proposal and point migration modules run in parallel and are assembled to form binary masks of instances. We also introduce two margin-based losses for the point migration to enforce corrections for the false positives/negatives and cohesion of foreground points, significantly improving the performance. Experimental results from three datasets, such as ScanNetV2, S3DIS, and STPLS3D, show that our proposed method outperforms existing works, demonstrating the effectiveness of the new instance representation with spherical coordinates.
 
 
-Details of the model architecture and experimental results can be found in [our paper](https://arxiv.org/abs/2312.11269):
+Details of the model architecture and experimental results can be found in [our paper](https://arxiv.org/abs/2312.11269).
 
 ## Quick Demo :fire:
 
@@ -30,6 +30,7 @@ python python tools/train.py configs/scannetv2/spherical_mask.yaml --trainall --
 # test
 python python tools/test.py configs/scannetv2/spherical_mask.yaml --ckpt path_to_ckpt.pth
 ```
+More detailed instructions on library dependencies and environments will be uploaded soon.
 
 **Please CITE** our paper if you found this repository helpful for producing publishable results or incorporating it into other software.
 ```bibtext

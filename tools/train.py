@@ -49,7 +49,7 @@ def get_args():
     args = parser.parse_args()
     return args
 
-
+'''
 def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger, writer):
 
    
@@ -85,6 +85,92 @@ def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger,
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+        
+        # time and print
+        remain_iter = len(train_loader) * (cfg.epochs - epoch + 1) - i
+        iter_time.update(time.time() - end)
+        end = time.time()
+        remain_time = remain_iter * iter_time.avg
+        remain_time = str(datetime.timedelta(seconds=int(remain_time)))
+        lr = optimizer.param_groups[0]["lr"]
+       
+        if scheduler is not None:
+            scheduler.step()
+
+        if is_multiple(i, 10):
+        
+            log_str = f"Epoch [{epoch}/{cfg.epochs}][{i}/{len(train_loader)}]  "
+            log_str += (
+                f"lr: {lr:.2g}, eta: {remain_time}, mem: {get_max_memory()}, "
+                f"data_time: {data_time.val:.2f}, iter_time: {iter_time.val:.2f}"
+            )
+            for k, v in meter_dict.items():
+                log_str += f", {k}: {v.val:.4f}"
+
+            
+
+            logger.info(log_str)
+    if is_processed :
+        optimizer.step()
+        optimizer.zero_grad()
+        
+        
+        print('processed i {0} loss_accmul: {1}'.format(i,loss_accumul))
+        loss_accumul = 0
+        is_processed = False    
+    writer.add_scalar("train/learning_rate", lr, epoch)
+    for k, v in meter_dict.items():
+        writer.add_scalar(f"train/{k}", v.avg, epoch)
+    checkpoint_save(epoch, model, optimizer, cfg.work_dir, cfg.save_freq)
+'''
+
+def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger, writer):
+
+   
+    model.train()
+    iter_time = AverageMeter(True)
+    data_time = AverageMeter(True)
+    meter_dict = {}
+    end = time.time()
+    
+    if train_loader.sampler is not None and cfg.dist:
+        train_loader.sampler.set_epoch(epoch)
+    model.zero_grad()
+    num_batch_accumul = 16 
+    loss_accumul, is_processed = 0, False
+    for i, batch in enumerate(train_loader, start=1):
+        data_time.update(time.time() - end)
+        
+        start_time = time.time()
+        if scheduler is None:
+            cosine_lr_after_step(optimizer, cfg.optimizer.lr, epoch - 1, cfg.step_epoch, cfg.epochs)
+        
+        with torch.cuda.amp.autocast(enabled=cfg.fp16):
+            loss, log_vars = model(batch, return_loss=True, epoch=epoch - 1)
+
+        # meter_dict
+        for k, v in log_vars.items():
+            if k != "placeholder":
+                if k not in meter_dict.keys():
+                    meter_dict[k] = AverageMeter()
+                meter_dict[k].update(v)
+
+        # backward
+        
+        loss_accumul += loss.item()
+        loss = loss / num_batch_accumul
+        
+        loss.backward()
+        is_processed = True
+        if i % num_batch_accumul == 0 and i > 0:
+            
+            optimizer.step()
+            optimizer.zero_grad()
+            
+            
+            print('processed i {0} loss_accmul: {1}'.format(i,loss_accumul))
+            loss_accumul = 0
+            is_processed = False
         
         # time and print
         remain_iter = len(train_loader) * (cfg.epochs - epoch + 1) - i
