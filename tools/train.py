@@ -328,13 +328,10 @@ def main():
     logger.info("Training")
     epoch = 0
     
-   
     best_score = 0
     best_epoch = 0
     torch.cuda.empty_cache()
     
-    #ap = validate(epoch, model, optimizer, val_loader, cfg, logger, writer)
-    #pdb.set_trace()
     for epoch in range(start_epoch, cfg.epochs + 1):
     
         train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger, writer)
@@ -351,10 +348,8 @@ def main():
             
         print('Best score/epoch : {0}/{1}'.format(best_score, best_epoch))
         
-        
-        
         writer.flush()
-    pdb.set_trace()
+  
     logger.info(f"Finish!!! Model at: {cfg.work_dir}")
 
 
