@@ -123,12 +123,11 @@ def train(epoch, model, optimizer, scheduler, scaler, train_loader, cfg, logger,
             
 
             logger.info(log_str)
-    if is_processed :
+    if is_processed : 
         optimizer.step()
         optimizer.zero_grad()
         
         
-        print('processed i {0} loss_accmul: {1}'.format(i,loss_accumul))
         loss_accumul = 0
         is_processed = False    
     writer.add_scalar("train/learning_rate", lr, epoch)
