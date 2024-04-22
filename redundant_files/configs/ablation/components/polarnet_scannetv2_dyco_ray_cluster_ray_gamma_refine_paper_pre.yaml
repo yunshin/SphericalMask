@@ -1,0 +1,123 @@
+model:
+  model_name: 'polarnet_dyco_ray_cluster_gamma_ablation'
+  channels: 32
+  num_blocks: 7
+  semantic_classes: 20
+  instance_classes: 18
+  sem2ins_classes: []
+  semantic_only: False
+  semantic_weight: False
+  with_coords: True
+  ignore_label: -100
+  voxel_scale: 50
+  use_spp_pool: True
+  filter_bg_thresh: 0.1
+  iterative_sampling: True
+  #rays_width: 3
+  #rays_height: 3
+  rays_width: 5
+  rays_height: 5
+  activation: ['ray','gamma_clustering'] #,'2nd_refine']
+  #activation: ['ray','gamma_clustering']
+  instance_head_cfg:
+    dec_dim: 128
+    #dec_dim: 256
+    #num_dyco_layer: 3
+    num_dyco_layer: 2
+    #n_sample_pa1: 2048
+    #n_queries: 256
+    n_sample_pa1: 2048
+    #n_sample_pa1: 1024
+    n_queries: 256
+    #n_queries: 128
+    radius_scale: 1
+    radius: 0.4
+    neighbor: 32
+  test_cfg:
+    x4_split: False
+    logit_thresh: 0.0
+    score_thresh: 0.2
+    #score_thresh: 0.01
+    npoint_thresh: 100
+    type_nms: 'matrix'
+    topk: 200 #1000 #500
+    #topk: 100
+  fixed_modules: ['input_conv', 'unet', 'output_layer', 'semantic_linear', 'offset_linear', 'offset_vertices_linear', 'box_conf_linear']
+
+data:
+  train:
+    type: 'scannetv2'
+    data_root: '/root/src/SoftGroup/dataset/scannetv2'
+    prefix: 'train' 
+    #prefix: 'trainval'
+    suffix: '_inst_nostuff.pth'
+    training: True
+    repeat: 1
+    voxel_cfg:
+      scale: 50
+      spatial_shape: [128, 512]
+      max_npoint: 250000
+      min_npoint: 5000
+  test:
+    type: 'scannetv2'
+    data_root: '/root/src/SoftGroup/dataset/scannetv2'
+    prefix: 'val'
+    #prefix: 'test'
+    suffix: '_inst_nostuff.pth'
+    training: False
+    voxel_cfg:
+      scale: 50
+      spatial_shape: [128, 512]
+      max_npoint: 250000
+      min_npoint: 5000
+
+
+dataloader:
+  train:
+    batch_size: 12
+    num_workers: 10
+    
+  test:
+    batch_size: 1
+    num_workers: 0
+
+optimizer:
+  type: 'AdamW'
+  #lr: 0.0001
+  lr: 0.001
+  #weight_decay: 0.00001
+  weight_decay: 0.0001
+save_cfg:
+  semantic: False
+  offset: False
+  instance: True
+  offset_vertices: False
+  nmc_clusters: False
+  object_conditions: False
+
+fp16: False
+#epochs: 300
+
+epochs: 200
+step_epoch: 30
+save_freq: 4
+paper: True
+
+
+
+#pretrain: '/root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_10.pth'
+#work_dir: '/root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_rebuttal/'
+#pretrain: '/root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth'
+
+#pretrain: '/root/data/pcdet_models/ISB_model_pretrain/epoch_1.pth'
+#pretrain: '/root/data/pcdet_models/ISB_model_pretrain_backbone/epoch_13.pth'
+#work_dir: '/root/data/pcdet_models/cvpr_release/' #smask_isb
+#work_dir: '/root/data/pcdet_models/cvpr_release_sig/' #smask_isb_encoder 
+work_dir: '/root/data/pcdet_models/encoder_finetune2/' #dup 12
+# best weight: pretrains/best_baseline.pth
+pretrain_encoder: '/root/data/pcdet_models/encoder_finetune/epoch_108.pth'   #'/root/data/pcdet_models/encoder_finetune2/trial.pth' #'/root/data/pcdet_models/encoder_finetune/epoch_100.pth'  
+#pretrain_encoder: 'None'
+#pretrain_encoder: '/root/data/pcdet_models/ISB_model_pretrain_backbone/epoch_239.pth'
+pretrain_decoder: '/root/data/pcdet_models/encoder_finetune/epoch_1.pth' #'/root/data/pcdet_models/encoder_finetune/epoch_80.pth'  #'/root/data/pcdet_models/encoder_finetune2/trial.pth' #'/root/data/pcdet_models/encoder_finetune/epoch_80.pth' 
+#pretrain_decoder: '/root/data/pcdet_models/ISB_model_pretrain_backbone/epoch_130.pth'
+

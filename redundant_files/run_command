@@ -1,0 +1,235 @@
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/isbnet_scannetv2.yaml --trainall --exp_name default
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/scannetv2/polarnet_scannetv2.yaml --trainall --exp_name default
+
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannetv2/polarnet_direct_scannetv2.yaml --trainall --exp_name default --resume /root/data/pcdet_models/ISB_model/with_angles/epoch_
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/polarnet_direct_scannetv2_no_mask.yaml --trainall --exp_name default --resume ~/data/pcdet_models/ISB_model/with_angles/no_mask/epoch_26.pth
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/polarnet_direct_scannetv2_with_mask.yaml --trainall --exp_name default --resume ~/data/pcdet_models/ISB_model/with_angles/with_mask/epoch_26.pth
+
+
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/polarnet_direct_scannetv2_ --trainall --exp_name default --resume ~/data/pcdet_models/ISB_model/with_angles/no_mask/epoch_26.pth
+
+### To analyze the ray gt
+CUDA_VISIBLE_DEVICES=1 python tools/ray_analyize.py configs/scannetv2/polarnet_direct_scannetv2_no_mask.yaml --trainall --exp_name default --resume ~/data/pcdet_models/ISB_model/with_angles/no_mask/epoch_91.pth
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannetv2/polarnet_scannetv2_dyco_ray_cluster.yaml --trainall --exp_name defaults
+
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/scannetv2/polarnet_scannetv2_dyco_ray_cluster_gamma.yaml --trainall --exp_name defaults
+
+#scannet200
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannet200/isbnet_scannet200.yaml --trainall --exp_name defaults
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannet200/polarnet_scannet200_dyco_ray_cluster.yaml --trainall --exp_name defaults
+
+#s3dis
+CUDA_VISIBLE_DEVICES=0 python tools/test.py configs/s3dis/isbnet_s3dis_area5.yaml /root/data/pcdet_models/s3dis/epoch_6.pth
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/s3dis/isbnet_s3dis_area5.yaml /root/data/pcdet_models/s3dis/epoch_6.pth --out /root/data/pcdet_data/s3dis/isbnet_pred
+
+
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/s3dis/isbnet_s3dis_area5.yaml --trainall  --exp_name default
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/s3dis/polarnet_s3dis_dyco_ray_cluster.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/s3dis/polarnet_s3dis_dyco_ray_cluster.yaml --trainall  --exp_name default
+
+
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/s3dis/polarnet_s3dis_dyco_ray_cluster.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/s3dis/polarnet_s3dis_area1.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/s3dis/polarnet_s3dis_area2.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/s3dis/polarnet_s3dis_area3.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/s3dis/polarnet_s3dis_area4.yaml --trainall  --exp_name default
+
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/s3dis/polarnet_s3dis_area5.yaml /root/data/pcdet_models/ours_s3dis_area5/epoch_40.pth --out /root/data/pcdet_data/s3dis/ours_pred
+#stpl3d
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/stpls3d/isbnet_stpls3d.yaml --trainall  --exp_name default
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/stpls3d/polarnet_stpls3d_dyco_ray_cluster.yaml --trainall  --exp_name default
+
+
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/stpls3d/polarnet_stpls3d_dyco_ray_cluster.yaml /root/data/pcdet_models/ISB_model/stpls3d/epoch_20.pth --out /root/data/pcdet_data/stpls3d/ours_pred
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/stpls3d/isbnet_stpls3d.yaml /root/data/pcdet_models/ISB_model/stpls3d/head_stpls3d_val.pth --out /root/data/pcdet_data/stpls3d/isbnet_pred
+
+#ScanNet paper result SMASK
+CUDA_VISIBLE_DEVICES=3 python tools/test.py configs/scannetv2/polarnet_scannetv2_dyco_ray_cluster_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_paper/epoch_1.pth --out /root/data/pcdet_data/scannet_pcdet_data/smask_result
+
+#ScanNet paper result ISBNet
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --out /root/data/pcdet_data/scannet_pcdet_data/isbnet_result
+
+#s3dis paper result:
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/s3dis/polarnet_s3dis_dyco_ray_cluster.yaml /root/data/pcdet_models/ISB_model_s3dis/dyco_rays_cluster/epoch_25.pth
+
+
+python visualization/vis_scannetv2.py --data_root /root/src/SoftGroup/dataset/scannetv2 --scene_name scene0011_00 --prediction_path /root/data/pcdet_data/scannet_pcdet_data/isbnet_result --task inst_pred
+
+
+###Test ScanNet for Vis
+CUDA_VISIBLE_DEVICES=3 python tools/test.py configs/scannetv2/polarnet_scannetv2_dyco_ray_cluster_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_paper/epoch_1.pth --out /root/data/pcdet_data/scannet_pcdet_data/smask_result
+
+
+####For VIS
+python tools/visualization.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/smask_result --room_name scene0011_00 --task instance_gt --out /root/data/pcdet_data/scannet_pcdet_data/smask_result/tmp.ply
+
+python tools/visualization.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/smask_result --room_name scene0011_00 --task instance_pred --out /root/data/pcdet_data/scannet_pcdet_data/smask_result/tmp_pred.ply
+
+
+
+###### Ablation base
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml --trainall --exp_name defaults
+
+###### Ablation Components
+#submission result
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml --trainall --exp_name defaults
+
+#ray_gamma_refine (all)
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml --trainall --exp_name defaults
+
+#ray_gamma_refine (all)
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine.yaml --trainall --exp_name defaults
+
+#ray_gamma
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma.yaml --trainall --exp_name defaults
+
+#ray_reinfe
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_refine.yaml --trainall --exp_name defaults
+
+#ray
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray.yaml --trainall --exp_name defaults
+
+###### Ablation Num_rays
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/num_rays/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_3_3.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/scannetv2/ablation/num_rays/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_4_4.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/ablation/num_rays/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_5_5.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannetv2/ablation/num_rays/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_6_6.yaml --trainall --exp_name defaults
+
+
+####### Ablation Voting
+CUDA_VISIBLE_DEVICES=0 python tools/train.py configs/scannetv2/ablation/voting/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_1024_128.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=1 python tools/train.py configs/scannetv2/ablation/voting/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_1024_256.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/ablation/voting/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_2048_256.yaml --trainall --exp_name defaults
+
+CUDA_VISIBLE_DEVICES=3 python tools/train.py configs/scannetv2/ablation/voting/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_2048_512.yaml --trainall --exp_name defaults
+
+
+
+
+
+
+
+####### Test on ScanNet Hidden Testset
+
+##Baseline
+CUDA_VISIBLE_DEVICES=3 python tools/test.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --out /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_hidden
+
+CUDA_VISIBLE_DEVICES=3 python tools/test_from_load.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --out /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val_mod --load_path /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val/pred_instance
+
+CUDA_VISIBLE_DEVICES=0 python tools/test_each_room.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --load_path /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val/pred_instance
+
+
+
+
+
+
+##Baseline Val
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --out /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val_prac
+
+CUDA_VISIBLE_DEVICES=1 python tools/test_each_room.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --out /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_train
+
+
+
+
+
+##Ours Val
+CUDA_VISIBLE_DEVICES=2 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_117.pth --out /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val
+
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_margin/epoch_127.pth --out /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val_paper
+
+###Ours testset
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_117.pth --out /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_hidden_117
+
+#or
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_margin/epoch_127.pth --out /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_hidden_127
+
+CUDA_VISIBLE_DEVICES=0 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_margin/epoch_202.pth --out /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_hidden_202
+
+
+##Vis
+#baseline test
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_hidden --room_name None --task instance_pred --data_split test --out_base /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_hidden/vis
+
+#baseline val
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/isbnet_scannet_val/vis
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val/vis
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val_paper --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_val_paper/vis
+
+###Vis ours test
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_hidden_117 --room_name None --task instance_pred --data_split test --out_base /root/data/pcdet_data/scannet_pcdet_data/ours_scannet_hidden_117/vis
+
+
+#### Vis MAFT
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/maft_scannet --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/maft_scannet/vis
+
+
+
+#ablation vis
+####
+CUDA_VISIBLE_DEVICES=1 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray/epoch_50.pth --out /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray
+
+CUDA_VISIBLE_DEVICES=0 python tools/test_each_room.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray/epoch_50.pth --out /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray
+
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray/vis
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/202_submission --room_name None --task instance_pred --data_split test --out_base /root/data/pcdet_data/scannet_pcdet_data/202_submission/vis
+####
+
+CUDA_VISIBLE_DEVICES=0 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma/paper.pth --out /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray_gamma
+
+
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray_gamma --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray_gamma/vis
+
+####
+
+CUDA_VISIBLE_DEVICES=2 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_refine.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma/paper.pth #--out /root/data/pcdet_data/scannet_pcdet_data/abl_scannet_val_ray_gamma
+
+CUDA_VISIBLE_DEVICES=1 python tools/nms_for_submission.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_margin/epoch_206.pth --load_path /root/data/pcdet_data/scannet_pcdet_data/202_submission/pred_instance --out /root/data/pcdet_data/scannet_pcdet_data/202_submission/pred_instance_nms
+
+python tools/visualization_seqs.py --prediction_path /root/data/pcdet_data/scannet_pcdet_data/202_submission/pred_instance_nms --room_name None --task instance_pred --data_split val --out_base /root/data/pcdet_data/scannet_pcdet_data/202_submission/vis_nms
+
+
+CUDA_VISIBLE_DEVICES=0 python tools/test_each_room.py configs/scannetv2/test/isbnet_scannetv2.yaml /root/data/pcdet_models/ISB_model/head_3dyco_scannetv2_val.pth --load_path /root/data/pcdet_data/scannet_pcdet_data/scannet_val_gt
+
+#Binary Cls exp
+UDA_VISIBLE_DEVICES=2 python tools/test.py config
+s/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper_binary.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_50.pth
+
+
+CUDA_VISIBLE_DEVICES=2 python tools/test.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper_binary.yaml /root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_10.pth
+#train binary for rebuttal
+CUDA_VISIBLE_DEVICES=2 python tools/train.py configs/scannetv2/ablation/components/polarnet_scannetv2_dyco_ray_cluster_ray_gamma_refine_paper_binary.yaml --trainall --exp_name defaults #/root/data/pcdet_models/ISB_model/dyco_rays_cluster_gamma_ablation/ray_gamma_refine_paper/epoch_10.pth
+
+
+
+
+
+
+
+
+# root(Madhu): /root/src/SoftGroup/dataset/scannetv2/scans_test/scene0707_00/scene0707_00.sens
+# output path: /root/nas/madhu/data/scannet_test
+python transfer_data_madhu.py --filename /root/src/SoftGroup/dataset/scannetv2/scans_test/scene0707_00/scene0707_00.sens --output_path /root/nas/madhu/data/scannet_test --export_depth_images --export_color_images --export_poses --export_intrinsics
+Options:
+--export_depth_images: export all depth frames as 16-bit pngs (depth shift 1000)
+--export_color_images: export all color frames as 8-bit rgb jpgs
+--export_poses: export all camera poses (4x4 matrix, camera to world)
+--export_intrinsics: export camera intrinsics (4x4 matrix)
