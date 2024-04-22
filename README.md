@@ -1,3 +1,5 @@
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/spherical-mask-coarse-to-fine-3d-point-cloud/3d-instance-segmentation-on-scannetv2)](https://paperswithcode.com/sota/3d-instance-segmentation-on-scannetv2?p=spherical-mask-coarse-to-fine-3d-point-cloud)
+
 ## [CVPR 2024] Spherical Mask: Coarse-to-Fine 3D Point Cloud Instance Segmentation with Spherical Representation 
 
 <a href="https://arxiv.org/abs/2312.11269"><img src=docs/sph_mask.jpeg></a>
