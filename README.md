@@ -1,6 +1,6 @@
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/spherical-mask-coarse-to-fine-3d-point-cloud/3d-instance-segmentation-on-scannetv2)](https://paperswithcode.com/sota/3d-instance-segmentation-on-scannetv2?p=spherical-mask-coarse-to-fine-3d-point-cloud)
 
-## [CVPR 2024] Spherical Mask: Coarse-to-Fine 3D Point Cloud Instance Segmentation with Spherical Representation 
+## [CVPR 24] Spherical Mask: Coarse-to-Fine 3D Point Cloud Instance Segmentation with Spherical Representation 
 
 <a href="https://arxiv.org/abs/2312.11269"><img src=docs/sph_mask.jpeg></a>
 [Sangyun Shin](https://www.cs.ox.ac.uk/people/sangyun.shin/),
@@ -22,17 +22,19 @@ Details of the model architecture and experimental results can be found in [our 
 
 | Dataset | AP | AP_50 | Config | Checkpoint
 |:-:|:-:|:-:|:-:|:-:|
-| ScanNet val | 62.6 | 81.9 | [config](configs/scannetv2/spherical_mask.yaml) | [checkpoint](https://drive.google.com/file/d/1WJtBr3nxaCaGCA_z1_dpu9bISnPAoxoL/view?usp=drive_link)
-
-For the best training result, we recommend initializing the encoder with the pretrained-weights checkpoint([Download](https://drive.google.com/file/d/1TXGV-lVmmw94AJkqo6_Ms8wO5aVKhFdz/view?usp=drive_link)) from [ISBNet](https://arxiv.org/abs/2303.00246). 
+| ScanNet val | 62.6 | 81.9 | [config](configs/scannetv2/spherical_mask.yaml) | [checkpoint](https://drive.google.com/file/d/1WJtBr3nxaCaGCA_z1_dpu9bISnPAoxoL/view?usp=drive_link) 
+     
+* December, 2023: Spherical Mask achieves state-of-the-art in ScanNet-V2 3D instance segmentation. [[Link]](https://kaldir.vc.in.tum.de/scannet_benchmark/semantic_instance_3d?metric=ap) [[Screenshot]](docs/leaderboard_2204.png)
+  
+For the best training result, we recommend initializing the encoder with the pretrained-weights checkpoint([Download](https://drive.google.com/file/d/1OeHRgkEkxvPkUOrFacmNUevrrAjHW6DA/view?usp=drive_link)) from [ISBNet](https://arxiv.org/abs/2303.00246). 
 After downloading the pre-trained weights, please specify the path in configs/scannetv2/spherical_mask.yaml
 ```shell
 # train 
-python python tools/train.py configs/scannetv2/spherical_mask.yaml --trainall --exp_name defaults
+python tools/train.py configs/scannetv2/spherical_mask.yaml --trainall --exp_name defaults
 # test
-python python tools/test.py configs/scannetv2/spherical_mask.yaml --ckpt path_to_ckpt.pth
+python tools/test.py configs/scannetv2/spherical_mask.yaml --ckpt path_to_ckpt.pth
 ```
-More detailed instructions on library dependencies and environments will be uploaded soon.
+The code has been tested using torch==1.12.1 and cuda==11.3 on Ubuntu 20.04. 
 
 **Please CITE** our paper if you found this repository helpful for producing publishable results or incorporating it into other software.
 ```bibtext
