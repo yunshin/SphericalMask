@@ -21,7 +21,6 @@ from .model_utils import (
     superpoint_align,
     get_cropped_instance_label,
     get_instance_info_dyco_ray,
-    try_vectorize,
     mask2ray,
     find_sector
 )
@@ -236,8 +235,7 @@ class SphericalMask(nn.Module):
                 param.requires_grad = False
         if self.criterion != None:
             self.criterion.set_angles_ref(self.angles_ref, self.rays_width, self.rays_height)
-            #self.criterion.set_activation(activation)
-       
+            
         if "input_conv" in self.fixed_modules and "unet" in self.fixed_modules:
             self.freeze_backbone = True
         else:
@@ -1102,6 +1100,7 @@ class SphericalMask(nn.Module):
             .flatten(0, 1)
         )
         
+       
         _, idx = torch.topk(cls_scores_flatten, k=min(90, len(cls_scores_flatten)), largest=True)
         mask_idx = torch.div(idx, self.instance_classes, rounding_mode="floor")
 

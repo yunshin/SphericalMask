@@ -21,8 +21,7 @@ from spherical_mask.util import (
     get_dist_info,
     get_root_logger,
     init_dist,
-    load_checkpoint_encoder,
-    load_checkpoint_decoder
+    load_checkpoint
 )
 
 np.random.seed(0)
@@ -121,11 +120,9 @@ def main():
 
     logger.info(f"Config:\n{cfg_txt}")
     logger.info(f"Distributed: {args.dist}")
-    logger.info(f"Mix precision training: {cfg.fp16}")
     shutil.copy(args.config, osp.join(cfg.work_dir, osp.basename(args.config)))
     
 
-    logger.info(f"Save at: {cfg.work_dir}")
 
     # model
     
@@ -162,24 +159,15 @@ def main():
     
     test_loader = build_dataloader(val_set, training=False, dist=False, **cfg.dataloader.test)
    
-    # optim
-    default_lr = cfg.optimizer.lr  # default for batch 16
-    _, world_size = get_dist_info()
-    total_batch_size = cfg.dataloader.train.batch_size * world_size
-    scaled_lr = default_lr * (total_batch_size / 16)
-    cfg.optimizer.lr = scaled_lr
-    logger.info(f"Scale LR from {default_lr} (batch size 16) to {scaled_lr} (batch size {total_batch_size})")
-    
     # load_model
    
     
     assert args.ckpt != None, 'ckpt path must be provided for testing.'
-    load_checkpoint_encoder(args.ckpt, logger, model)
-    load_checkpoint_decoder(args.ckpt, logger, model)
+    assert os.path.exists(args.ckpt), '{0} does not exist.'.format(args.ckpt)
+    load_checkpoint(args.ckpt, logger, model)
 
     
     # test
-    logger.info("Training")
     torch.cuda.empty_cache()
     ap = test(model, test_loader, cfg, logger)
    

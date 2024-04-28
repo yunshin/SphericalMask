@@ -25,11 +25,8 @@ from spherical_mask.util import (
     get_root_logger,
     init_dist,
     is_multiple,
-    load_checkpoint,
-    load_checkpoint_encoder,
-    load_checkpoint_decoder
+    load_checkpoint
 )
-import pdb
 
 np.random.seed(0)
 torch.manual_seed(0)
@@ -311,15 +308,15 @@ def main():
     start_epoch = 1
     if args.resume:
         logger.info(f"Resume from {args.resume}")
+        assert os.path.exists(args.resume), '{0} does not exist.'.format(args.resume)
         start_epoch = load_checkpoint(args.resume, logger, model, optimizer=optimizer)
     else:
-        if cfg.pretrain_encoder and cfg.pretrain_encoder != 'None':
-            logger.info(f"Load pretrain from {cfg.pretrain_encoder}")
-            load_checkpoint_encoder(cfg.pretrain_encoder, logger, model)
-        if cfg.pretrain_decoder and cfg.pretrain_decoder != 'None':
-            logger.info(f"Load pretrain from {cfg.pretrain_decoder}")
-            load_checkpoint_decoder(cfg.pretrain_decoder, logger, model)
-
+        if cfg.pretrain_ckpt :
+            assert os.path.exists(cfg.pretrain_ckpt), '{0} does not exist.'.format(cfg.pretrain_ckpt)
+            logger.info(f"Load pretrain from {cfg.pretrain_ckpt}")
+            load_checkpoint(cfg.pretrain_ckpt, logger, model)
+   
+ 
     scheduler = None
     global best_metric
     best_metric = 0

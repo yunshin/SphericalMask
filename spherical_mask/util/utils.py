@@ -126,6 +126,7 @@ def load_checkpoint(checkpoint, logger, model, optimizer=None, strict=False):
         if src_state_dict[k].size() != target_state_dict[k].size():
            
             skip_keys.append(k)
+       
     for k in skip_keys:
         del src_state_dict[k]
     missing_keys, unexpected_keys = model.load_state_dict(src_state_dict, strict=strict)
@@ -155,115 +156,6 @@ def load_checkpoint(checkpoint, logger, model, optimizer=None, strict=False):
     return epoch + 1
 
 
-def load_checkpoint_encoder(checkpoint, logger, model, optimizer=None, strict=False):
-    if hasattr(model, "module"):
-        model = model.module
-    device = torch.cuda.current_device()
-    state_dict = torch.load(checkpoint, map_location=lambda storage, loc: storage.cuda(device))
-    src_state_dict = state_dict["net"]
-    target_state_dict = model.state_dict()
-    skip_keys = []
-    
-    # skip mismatch size tensors in case of pretraining
-    for k in src_state_dict.keys():
-        if k not in target_state_dict:
-            continue
-        is_in = False
-        is_skip = False
-        if 'unet' in k:
-            is_in = True
-        if 'input_conv' in k:
-            is_in = True
-        if 'output_layer' in k:
-            is_in = True
-        if is_in == False:
-            skip_keys.append(k)
-            is_skip = True
-        if is_skip == False and src_state_dict[k].size() != target_state_dict[k].size():
-           
-            skip_keys.append(k)
-    for k in skip_keys:
-        del src_state_dict[k]
-    missing_keys, unexpected_keys = model.load_state_dict(src_state_dict, strict=strict)
-    '''
-    if logger is not None:
-        if skip_keys:
-            logger.info(f'removed keys in source state_dict due to size mismatch: {", ".join(skip_keys)}')
-        if missing_keys:
-            logger.info(f'missing keys in source state_dict: {", ".join(missing_keys)}')
-        if unexpected_keys:
-            logger.info(f'unexpected key in source state_dict: {", ".join(unexpected_keys)}')
-    else:
-        if skip_keys:
-            print(f'removed keys in source state_dict due to size mismatch: {", ".join(skip_keys)}')
-        if missing_keys:
-           print(f'missing keys in source state_dict: {", ".join(missing_keys)}')
-        if unexpected_keys:
-            print(f'unexpected key in source state_dict: {", ".join(unexpected_keys)}')
-    '''
-    # load optimizer
-    if optimizer is not None:
-        assert "optimizer" in state_dict
-        optimizer.load_state_dict(state_dict["optimizer"])
-
-    
-    epoch = 0
-    return epoch + 1
-
-def load_checkpoint_decoder(checkpoint, logger, model, optimizer=None, strict=False):
-    if hasattr(model, "module"):
-        model = model.module
-    device = torch.cuda.current_device()
-    state_dict = torch.load(checkpoint, map_location=lambda storage, loc: storage.cuda(device))
-    src_state_dict = state_dict["net"]
-    target_state_dict = model.state_dict()
-    skip_keys = []
-    
-    # skip mismatch size tensors in case of pretraining
-    for k in src_state_dict.keys():
-        if k not in target_state_dict:
-            continue
-        is_in = False
-        is_skip = False
-        if 'unet' in k:
-            is_in = True
-        if 'input_conv' in k:
-            is_in = True
-        if 'output_layer' in k:
-            is_in = True
-        if is_in:
-            skip_keys.append(k)
-            is_skip = True
-        if is_skip == False and src_state_dict[k].size() != target_state_dict[k].size():
-           
-            skip_keys.append(k)
-    for k in skip_keys:
-        del src_state_dict[k]
-    missing_keys, unexpected_keys = model.load_state_dict(src_state_dict, strict=strict)
-    '''
-    if logger is not None:
-        if skip_keys:
-            logger.info(f'removed keys in source state_dict due to size mismatch: {", ".join(skip_keys)}')
-        if missing_keys:
-            logger.info(f'missing keys in source state_dict: {", ".join(missing_keys)}')
-        if unexpected_keys:
-            logger.info(f'unexpected key in source state_dict: {", ".join(unexpected_keys)}')
-    else:
-        if skip_keys:
-            print(f'removed keys in source state_dict due to size mismatch: {", ".join(skip_keys)}')
-        if missing_keys:
-           print(f'missing keys in source state_dict: {", ".join(missing_keys)}')
-        if unexpected_keys:
-            print(f'unexpected key in source state_dict: {", ".join(unexpected_keys)}')
-    '''
-    # load optimizer
-    if optimizer is not None:
-        assert "optimizer" in state_dict
-        optimizer.load_state_dict(state_dict["optimizer"])
-
-    
-    epoch = 0
-    return epoch + 1
 
 def get_max_memory():
     mem = torch.cuda.max_memory_allocated()
